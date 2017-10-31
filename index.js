@@ -28,6 +28,15 @@ io.on("connection", function(socket) {
 		// io.sockets.emit()
 		//emit to all clients open, io.emit would do that in socket.io 2.0
 		io.emit("chat", data);
+	});
+
+	//broadcast 'typing' message
+	//In order to send an event to everyone, use io.emit
+	//If you want to send a message to everyone except for a certain socket, use broadcast flag 
+	socket.on("typing", function(data) {
+		//broadcast this to every single socket connection 
+		socket.broadcast.emit("typing", data);
 	})
-})
+
+});
 

@@ -6,9 +6,8 @@ var socket = io();
 var message = $("#message"), 
 	handle = $("#handle"), 
 	btn = $("#send"), 
+	feedback = $("#feedback"),
 	output = $("#output");
-
-//the value can be retrieved using id.value
 
 //Emit events
 btn.on('click', function(){
@@ -18,9 +17,26 @@ btn.on('click', function(){
 	});
 });
 
+//add a keypress event
+message.keypress(function() {
+	socket.emit("typing", handle.val());
+});
+
+
 //listen for events from server
 socket.on("chat", function(data) {
-	console.log("got a text");
+	// console.log("got a text");
+	//clear the "typing" event from feedback element
+	feedback.html("");
+
 	output.append("<p><strong>" + data.handle + ": </strong>" + data.message + "</p>");
-})
+
+	//clear handle and message input box
+	handle.val("");
+	message.val("");
+});
+
+socket.on("typing", function(data) {
+	feedback.html('<p><em>' + data + ' is typing a message...' + '</em></p>');
+});
 
